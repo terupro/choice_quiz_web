@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title> ChoiceQuiz6original </title>
+ <script>
+ var cv, gc, stage=1, quizelement=[], quizlist=[], quiznum, time, quizrest, pt, norm;
+
+ function init() {
+ cv = document.getElementById("screen");
+ gc = cv.getContext("2d");
+ gc.fillStyle = "navy";
+ gc.fillRect(0, 0, 800, 600);
+ gc.fillStyle = "white";
+ gc.font = "24px serif";
+ gc.fillText("ステージ", 685, 545);
+ gc.fillText(stage, 762, 580);
+ quiznum=0;
+ time=9;
+ quizrest=5;
+ pt=0;
+ norm=3;
+ for(var i=0; i<=4; i++){
+ quizelement[i] = document.getElementById("z"+i+"");
+ }
+ for (var j=4; j>=0; j--){
+ var r = Math.floor(Math.random()*(j+1));
+ var tmp = quizelement[j];
+ quizelement[j] = quizelement[r];
+ quizelement[r] = tmp;
+ }
+ quizelement.splice(quizrest, 10-quizrest);
+ var quiztext;
+ for(var k=0; k<quizrest; k++){
+ quiztext = quizelement[k].textContent;
+ quizlist[k] = quiztext.split("$");
+ }
+ mainloop();
+ }
+ function mainloop() {
+ if((norm-pt)==0) {
+ gc.fillStyle = "gold";
+ gc.fillRect(170, 140, 460, 260);
+ gc.fillStyle = "red";
+ gc.font = "60px serif";
+ gc.fillText("ステージクリア", 190, 290);
+ stage++;
+ setTimeout(init, 1000);
+ }
+ else if((norm-pt) > quizrest){
+ gc.fillStyle = "gold";
+ gc.fillRect(170, 140, 460, 260);
+ gc.fillStyle = "blue";
+ gc.font = "60px serif";
+
+gc.fillText("ゲームオーバー", 190, 290);
+ }
+ else{
+ btncover.style.display = "none";
+ quizpaint();
+ imgpaint();
+ choicepaint();
+ timepaint();
+ normpaint();
+ }
+ }
+ function quizpaint() {
+ gc.fillStyle = "darkgreen";
+ gc.fillRect(0, 0, 800, 140);
+ gc.fillStyle = "white";
+ gc.font = "24px serif";
+ gc.fillText(quizlist[quiznum][0], 20, 50);
+ }
+ function imgpaint() {
+ gc.fillStyle = "gold";
+ gc.fillRect(170, 140, 460, 260);
+ var img = document.getElementById(quizelement[quiznum].dataset.img);
+ gc.drawImage(img, 175, 145, 450, 250);
+ }
+ function choicepaint() {
+ gc.fillStyle = "green";
+ gc.fillRect(130, 400, 540, 200);
+ btn1back.style.display = "";
+ btn1back.style.position = "absolute";
+ btn1back.style.left = "155px";
+ btn1back.style.top = "430px";
+ btn1back.style.width = "40px";
+ btn1back.style.height = "40px";
+ btn1.style.display = "";
+ btn1.style.position = "absolute";
+ btn1.style.left = "155px";
+ btn1.style.top = "430px";
+ btn1.style.width = "40px";
+ btn1.style.height = "40px";
+ btn1.onmouseover = function(){btn1.style.opacity = 0.5;};
+ btn1.onmouseout = function(){btn1.style.opacity = 1.0;};
+ btn1.onclick = function(){answercheck(1);};
+ btn2back.style.display = "";
+ btn2back.style.position = "absolute";
+ btn2back.style.left = "155px";
+ btn2back.style.top = "490px";
+ btn2back.style.width = "40px";
+ btn2back.style.height = "40px";
+ btn2.style.display = "";
+ btn2.style.position = "absolute";
+ btn2.style.left = "155px";
+ btn2.style.top = "490px";
+ btn2.style.width = "40px";
+ btn2.style.height = "40px";
+ btn2.onmouseover = function(){btn2.style.opacity = 0.5;};
+ btn2.onmouseout = function(){btn2.style.opacity = 1.0;};
+ btn2.onclick = function(){answercheck(2);}
+ btn3back.style.display = "";
+ btn3back.style.position = "absolute";
+ btn3back.style.left = "155px";
+ btn3back.style.top = "550px";
+ btn3back.style.width = "40px";
+ btn3back.style.height = "40px";
+ btn3.style.display = "";
+ btn3.style.position = "absolute";
+ btn3.style.left = "155px";
+ btn3.style.top = "550px";
+ btn3.style.width = "40px";
+ btn3.style.height = "40px";
+ btn3.onmouseover = function(){btn3.style.opacity = 0.5;};
+ btn3.onmouseout = function(){btn3.style.opacity = 1.0;};
+ btn3.onclick = function(){answercheck(3);}
+ for(var i=1; i<=3; i++){
+ gc.fillStyle = "white";
+ gc,font = "24px serif";
+ gc.fillText(quizlist[quiznum][i], 200, 450+(i-1)*60);
+ }
+ }
+ function answercheck(choice) {
+ btncover.style.display = "";
+ btncover.style.position = "absolute";
+ btncover.style.left = "155px";
+ btncover.style.top = "430px";
+ btncover.style.width = "40px";
+ btncover.style.height = "160px";
+ gc.fillStyle = "hotpink";
+ gc.font = "24px serif";
+ gc.fillText(quizlist[quiznum][choice], 200, 450+(choice-1)*60);
+ var answer = quizelement[quiznum].dataset.answer;
+ if(choice==answer){
+ soundcorrect.play();
+ gc.fillStyle = "red";
+ gc.font = "144px serif";
+ gc.fillText("正解！", 210, 320);
+ pt++;
+ }
+ else{
+ soundincorrect.play();
+ gc.fillStyle = "blue";
+ gc.font = "144px serif";
+ gc.fillText("ハズレ", 190, 320);
+ }
+ quizrest--;
+ quiznum++;
+
+ setTimeout(mainloop, 1000);
+ }
+ function timepaint() {
+ gc.fillStyle = "saddlebrown";
+ gc.fillRect(0, 140, 170, 260);
+ gc.fillStyle = "deepskyblue";
+ gc.font = "24px serif";
+ gc.fillText("残りタイム", 25, 190);
+ gc.font = "72px serif";
+ gc.fillText(time, 60, 300);
+ }
+ function normpaint() {
+ gc.fillStyle = "brown";
+ gc.fillRect(630, 140, 170, 260);
+ gc.fillStyle = "deepskyblue";
+ gc.font = "24px serif";
+ gc.fillText("残りノルマ", 655, 190);
+ gc.fillText("残り問題数", 655, 310);
+ gc.font = "48px serif";
+ gc.fillText((norm-pt), 700, 250);
+ gc.fillText(quizrest, 700, 370);
+ }
+ </script>
+</head>
+<body onload="init()">
+ <canvas id="screen" width="800" height="600"></canvas> <br>
+
+   <p id="z0" data-img="script" data-answer=1 style="display:none">Q JavaScriptの開発段階の名前は？$LiveScript$ModernScript$SpeedScript</p>
+   <p id="z1" data-img="p" data-answer=1 style="display:none">Q HTMLの「p要素」はなにを表す？$テキストの段落$テキストの見出し$テキストのタイトル</p>
+   <p id="z2" data-img="human" data-answer=1 style="display:none">Q JavaScript作ったの誰は？$ブランダン・アイク$マーク・ザッカーバーグ$スティーブ・ジョブズ</p>
+   <p id="z3" data-img="code" data-answer=2 style="display:none">Q JavaScriptで書いたコードは？$puts "HalloWorld!"$alert ('HalloWorld!')$print ("HalloWorld!")</p>
+   <p id="z4" data-img="array" data-answer=2 style="display:none">Q 次の配列のうち出力されるのは？$赤$青$緑</p>
+
+ <img id="script" src="script.jpeg" style="display:none"/>
+ <img id="p" src="p.jpeg" style="display:none"/>
+ <img id="human" src="human.jpeg" style="display:none"/>
+ <img id="code" src="code.jpeg" style="display:none"/>
+ <img id="array" src="array.jpeg" style="display:none"/>
+ 
+ <img id="btn1back" src="btn1back.png" style="display:none" />
+ <img id="btn1" src="btn1.png" style="display:none" />
+ <img id="btn2back" src="btn2back.png" style="display:none" />
+ <img id="btn2" src="btn2.png" style="display:none" />
+ <img id="btn3back" src="btn3back.png" style="display:none" />
+ <img id="btn3" src="btn3.png" style="display:none" />
+ <img id="btncover" src="btncover.png" style="display:none" />
+ <audio id="soundcorrect" src="correct.mp3"></audio>
+ <audio id="soundincorrect" src="incorrect.mp3"></audio>
+</body>
+</html>
