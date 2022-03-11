@@ -1,5 +1,5 @@
 # choice_quiz_web
-クイズアプリ for Web
+HTML,CSS,JavaScriptを使用したクイズアプリ
 
 # 画像
 
